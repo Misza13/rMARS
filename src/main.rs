@@ -12,7 +12,7 @@ use pest::iterators::Pair;
 struct AssemblyParser;
 
 fn main() {
-    let warrior = fs::read_to_string("warriors/dwarf.red").expect("Could not read input file");
+    let warrior = fs::read_to_string("warriors/validate.red").expect("Could not read input file");
 
     println!("{}", warrior);
     

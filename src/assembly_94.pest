@@ -5,7 +5,9 @@ assembly_file = {
     EOI
 }
 
-line = { comment | instruction_line | label_line | empty_line }
+line = { comment_line | instruction_line | label_line | empty_line }
+
+comment_line = { comment }
 
 comment = { ";" ~ ('\x20'..'\xFF' | WHITESPACE)* }
 
@@ -22,18 +24,18 @@ alpha = { ASCII_ALPHA | "_" }
 operation = ${ opcode ~ ("." ~ modifier)? }
 
 opcode = {
-    "DAT" | "MOV" |
-    "ADD" | "SUB" | "MUL" | "DIV" | "MOD" |
-    "JMP" | "JMZ" | "JMN" | "DJN" | "CMP" | "SLT" | "SPL"
+    ^"DAT" | ^"MOV" |
+    ^"ADD" | ^"SUB" | ^"MUL" | ^"DIV" | ^"MOD" |
+    ^"JMP" | ^"JMZ" | ^"JMN" | ^"DJN" | ^"CMP" | ^"SLT" | ^"SPL"
 }
 
 pseudo_operation = {
-    "ORG" ~ field |
-    "EQU" ~ field |
-    "END" ~ field?
+    ^"ORG" ~ field |
+    ^"EQU" ~ field |
+    ^"END" ~ field?
 }
 
-modifier = { "AB" | "BA" | "A" | "B" | "F" | "X" | "I" }
+modifier = { ^"AB" | ^"BA" | ^"A" | ^"B" | ^"F" | ^"X" | ^"I" }
 
 fields = { field ~ ("," ~ field)? }
 
@@ -41,7 +43,14 @@ field = { mode? ~ expression }
 
 mode = { "#" | "$" | "@" | "<" | ">" }
 
-expression = { term }
+expression = {
+    term ~ "+" ~ expression |
+    term ~ "-" ~ expression |
+    term ~ "*" ~ expression |
+    term ~ "/" ~ expression |
+    term ~ "%" ~ expression |
+    term
+}
 
 term = { label | number | ("(" ~ expression ~ ")") }
 
