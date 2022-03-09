@@ -5,11 +5,47 @@ assembly_file = {
     EOI
 }
 
-line = { comment | instruction | empty_line }
+line = { comment | instruction_line | label_line | empty_line }
 
 comment = { ";" ~ ('\x20'..'\xFF' | WHITESPACE)* }
 
-instruction = { "MOV 0, 1" ~ comment? }
+instruction_line = { (instruction ~ comment?) | (label ~ instruction_line)  }
+
+instruction = { operation ~ fields | pseudo_operation }
+
+label_line = { label+ ~ comment? }
+
+label = @{ alpha ~ (alpha | ASCII_DIGIT)* }
+
+alpha = { ASCII_ALPHA | "_" }
+
+operation = ${ opcode ~ ("." ~ modifier)? }
+
+opcode = {
+    "DAT" | "MOV" |
+    "ADD" | "SUB" | "MUL" | "DIV" | "MOD" |
+    "JMP" | "JMZ" | "JMN" | "DJN" | "CMP" | "SLT" | "SPL"
+}
+
+pseudo_operation = {
+    "ORG" ~ field |
+    "EQU" ~ field |
+    "END" ~ field?
+}
+
+modifier = { "AB" | "BA" | "A" | "B" | "F" | "X" | "I" }
+
+fields = { field ~ ("," ~ field)? }
+
+field = { mode? ~ expression }
+
+mode = { "#" | "$" | "@" | "<" | ">" }
+
+expression = { term }
+
+term = { label | number | ("(" ~ expression ~ ")") }
+
+number = @{ ("+" | "-")? ~ ASCII_DIGIT+ }
 
 empty_line = _{ WHITESPACE* }
 

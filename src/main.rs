@@ -12,7 +12,7 @@ use pest::iterators::Pair;
 struct AssemblyParser;
 
 fn main() {
-    let warrior = fs::read_to_string("warriors/imp.red").expect("Could not read input file");
+    let warrior = fs::read_to_string("warriors/dwarf.red").expect("Could not read input file");
 
     println!("{}", warrior);
     
@@ -26,13 +26,7 @@ fn print_rules(pair: Pair<Rule>, level: u32) {
         print!(" ");
     }
 
-    print!("{:?}", pair.as_rule());
-
-    match pair.as_rule() {
-        Rule::comment => println!(": {}", pair.as_str()),
-        Rule::instruction => println!(": {}", pair.as_str()),
-        _ => println!()
-    }
+    println!("{:?}: {}", pair.as_rule(), pair.as_str());
 
     for inner in pair.into_inner() {
         print_rules(inner, level + 1);
