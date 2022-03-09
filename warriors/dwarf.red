@@ -2,10 +2,10 @@
 
 ;name          Dwarf
 ;author        A. K. Dewdney
-;version       94.1
-;date          April 29, 1993
 
 ;strategy      Bombs every fourth instruction.
+
+;assert CORESIZE % 4 == 0
 
         ORG     start              ; Indicates the instruction with
                                    ; the label "start" should be the

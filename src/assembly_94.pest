@@ -1,21 +1,22 @@
-assembly_file = {
+assembly_file = ${
     SOI ~
     (line ~ NEWLINE)* ~
     line? ~
     EOI
 }
 
-line = { comment_line | instruction_line | label_line | empty_line }
+line = _{ comment_line | indented_comment_line | instruction_line | label_line | empty_line }
 
-comment_line = { comment }
+comment_line = @{ comment }
+indented_comment_line = { WHITESPACE+ ~ comment }
 
 comment = { ";" ~ ('\x20'..'\xFF' | WHITESPACE)* }
 
-instruction_line = { (instruction ~ comment?) | (label ~ instruction_line)  }
+instruction_line = !{ (WHITESPACE* ~ instruction ~ comment?) | (label ~ instruction_line)  }
 
 instruction = { operation ~ fields | pseudo_operation }
 
-label_line = { label+ ~ comment? }
+label_line = !{ label+ ~ comment? }
 
 label = @{ alpha ~ (alpha | ASCII_DIGIT)* }
 
