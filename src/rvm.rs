@@ -1,4 +1,5 @@
-enum Instruction {
+#[derive(Debug)]
+pub enum Instruction {
     DAT(Modifier, Operand, Operand),
     MOV(Modifier, Operand, Operand),
     ADD(Modifier, Operand, Operand),
@@ -15,7 +16,8 @@ enum Instruction {
     SPL(Modifier, Operand, Operand)
 }
 
-enum Modifier {
+#[derive(Debug)]
+pub enum Modifier {
     A,
     B,
     AB,
@@ -25,7 +27,8 @@ enum Modifier {
     I
 }
 
-enum Operand {
+#[derive(Debug)]
+pub enum Operand {
     Immediate(i32),
     Direct(i32),
     Indirect(i32),
